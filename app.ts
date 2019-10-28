@@ -5,10 +5,17 @@ import { render } from 'react-dom';
 
 // ----- Setup ----- //
 
-enum Cmd {
-    None,
-    Log,
-};
+abstract class CommandA<A = any> {
+    value: A
+    message?: Message
+    constructor(value: A, message?: Message) {
+        this.value = value;
+        this.message = message;
+    }
+}
+
+class None extends CommandA<void> {}
+class Log extends CommandA<string> {}
 
 export abstract class Message<A = any> {
     value: A
@@ -17,34 +24,24 @@ export abstract class Message<A = any> {
     }
 };
 
-export type Command
-    = { kind: Cmd.None }
-    | { kind: Cmd.Log, payload: string, message: Message };
-
-type Update<S> = (state: S, message: Message) => [S, Command];
+type Update<S> = <A>(state: S, message: Message) => [S, CommandA<A>];
 type View<S> = (state: S, event: (m: Message) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //
 
-function log(value: string, msg: Message): Command {
-    return { kind: Cmd.Log, payload: value, message: msg };
-}
-
-const none: Command = { kind: Cmd.None };
-
 function program<S>(initialState: S, update: Update<S>, view: View<S>) {
     const elem = document.getElementById('main');
     let mutableState = initialState;
 
-    function doCommand(cmd: Command): Promise<void> {
+    function doCommand<A>(cmd: CommandA<A>): Promise<void> {
         return new Promise((res, rej) => {
-            switch (cmd.kind) {
-                case Cmd.Log:
-                    console.log(cmd.payload);
-                    message(cmd.message);
+            switch (true) {
+                case cmd instanceof Log:
+                    console.log(cmd.value);
+                    cmd.message && message(cmd.message);
                     res();
-                case Cmd.None:
+                case cmd instanceof None:
                     res();
                 default:
                     rej();
@@ -72,6 +69,7 @@ function program<S>(initialState: S, update: Update<S>, view: View<S>) {
 
 export {
     program,
-    log,
-    none,
+    CommandA,
+    None,
+    Log,
 };

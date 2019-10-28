@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { program, log, none, Command, Message } from './app';
+import { program, Log, None, CommandA, Message } from './app';
 import React from 'react';
 
 
@@ -17,20 +17,20 @@ class SetName extends Message<string> {}
 class Logged extends Message<void> {}
 class LogWords extends Message<string> {}
 
-function update(state: State, message: Message): [State, Command] {
+function update(state: State, message: Message): [State, CommandA] {
     switch (true) {
         case message instanceof Increment:
-            return [ { ...state, num: state.num + 1 }, none ];
+            return [ { ...state, num: state.num + 1 }, new None() ];
         case message instanceof Decrement:
-            return [ { ...state, num: state.num - 1 }, none ];
+            return [ { ...state, num: state.num - 1 }, new None() ];
         case message instanceof SetName:
-            return [ { ...state, name: message.value }, none ];
+            return [ { ...state, name: message.value }, new None() ];
         case message instanceof Logged:
-            return [ { ...state, status: 'Logged' }, none ];
+            return [ { ...state, status: 'Logged' }, new None() ];
         case message instanceof LogWords:
-            return [ state, log('hello', new Logged()) ];
+            return [ state, new Log('hello', new Logged()) ];
         default:
-            return [ state, none ];
+            return [ state, new None() ];
     }
 }
 
