@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        // Supported by Node.js 10.16.3 (with the exception of tail recursion)
+        "target": "es6",
+        "module": "commonjs",
+        "jsx": "react",
+        "esModuleInterop": true,
+        // "lib": ["dom", "es2018"]
+        "strict": true
+    },
+    "files": [
+        "index.tsx"
+    ]
+}
