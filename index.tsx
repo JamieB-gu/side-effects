@@ -4,18 +4,18 @@ import { program, log, none, Command, Message } from './app';
 import React from 'react';
 
 
-// ----- Setup ----- //
+// ----- State ----- //
+
+type State = { num: number, name: string, status: string };
+
+
+// ----- Update ----- //
 
 class Increment extends Message<void> {}
 class Decrement extends Message<void> {}
 class SetName extends Message<string> {}
 class Logged extends Message<void> {}
 class LogWords extends Message<string> {}
-
-type State = { num: number, name: string, status: string };
-
-
-// ----- Functions ----- //
 
 function update(state: State, message: Message): [State, Command] {
     switch (true) {
@@ -33,6 +33,9 @@ function update(state: State, message: Message): [State, Command] {
             return [ state, none ];
     }
 }
+
+
+// ----- View ----- //
 
 function view(state: State, event: (m: Message) => void): React.ReactElement {
     return (
