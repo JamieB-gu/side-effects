@@ -11,9 +11,9 @@ enum Cmd {
 };
 
 export class Message<A = any> {
-    payload: A
-    constructor(payload: A) {
-        this.payload = payload;
+    value: A
+    constructor(value: A) {
+        this.value = value;
     }
 };
 

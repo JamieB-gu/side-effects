@@ -24,7 +24,7 @@ function update(state: State, message: Message): [State, Command] {
         case message instanceof Decrement:
             return [ { ...state, num: state.num - 1 }, none ];
         case message instanceof SetName:
-            return [ { ...state, name: message.payload }, none ];
+            return [ { ...state, name: message.value }, none ];
         case message instanceof Logged:
             return [ { ...state, status: 'Logged' }, none ];
         case message instanceof LogWords:
