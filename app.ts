@@ -10,7 +10,7 @@ enum Cmd {
     Log,
 };
 
-export class Message<A = any> {
+export abstract class Message<A = any> {
     value: A
     constructor(value: A) {
         this.value = value;
