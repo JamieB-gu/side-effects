@@ -5,36 +5,29 @@ import { render } from 'react-dom';
 
 // ----- Setup ----- //
 
-abstract class CommandA<A = any> {
+abstract class CommandA<M, A = any> {
     value: A
-    message?: Message
-    constructor(value: A, message?: Message) {
+    message?: M
+    constructor(value: A, message?: M) {
         this.value = value;
         this.message = message;
     }
 }
 
-class None extends CommandA<void> {}
-class Log extends CommandA<string> {}
+class None<M> extends CommandA<M, void> {}
+class Log<M> extends CommandA<M, string> {}
 
-export abstract class Message<A = any> {
-    value: A
-    constructor(value: A) {
-        this.value = value;
-    }
-};
-
-type Update<S> = <A>(state: S, message: Message) => [S, CommandA<A>];
-type View<S> = (state: S, event: (m: Message) => void) => React.ReactElement;
+type Update<S, M> = <A>(state: S, message: M) => [S, CommandA<M, A>];
+type View<S, M> = (state: S, event: (m: M) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //
 
-function program<S>(initialState: S, update: Update<S>, view: View<S>) {
+function program<S, M>(initialState: S, update: Update<S, M>, view: View<S, M>) {
     const elem = document.getElementById('main');
     let mutableState = initialState;
 
-    function doCommand<A>(cmd: CommandA<A>): Promise<void> {
+    function doCommand<A>(cmd: CommandA<M, A>): Promise<void> {
         return new Promise((res, rej) => {
             switch (true) {
                 case cmd instanceof Log:
@@ -49,7 +42,7 @@ function program<S>(initialState: S, update: Update<S>, view: View<S>) {
         });
     }
 
-    function message(msg: Message) {
+    function message(msg: M) {
         const [ state, cmd ] = update(mutableState, msg);
 
         mutableState = state;
