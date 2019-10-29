@@ -9,8 +9,8 @@ type Command<Msg>
     = { kind: 'None' }
     | { kind: 'Log', value: string, msg: Msg };
 
-type Update<S, M> = (state: S, message: M) => [S, Command<M>];
-type View<S, M> = (state: S, event: (m: M) => void) => React.ReactElement;
+type Update<State, Msg> = (state: State, message: Msg) => [State, Command<Msg>];
+type View<State, Msg> = (state: State, event: (m: Msg) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //
