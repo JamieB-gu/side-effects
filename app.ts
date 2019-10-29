@@ -5,23 +5,23 @@ import { render } from 'react-dom';
 
 // ----- Setup ----- //
 
-abstract class Command<M, A = any> {
-    value: A
-    message?: M
-    constructor(value: A, message?: M) {
-        this.value = value;
-        this.message = message;
-    }
-}
+type Command<Msg>
+    = { kind: 'None' }
+    | { kind: 'Log', value: string, msg: Msg };
 
-class None<M> extends Command<M, void> {}
-class Log<M> extends Command<M, string> {}
-
-type Update<S, M> = <A>(state: S, message: M) => [S, Command<M, A>];
+type Update<S, M> = (state: S, message: M) => [S, Command<M>];
 type View<S, M> = (state: S, event: (m: M) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //
+
+function log<Msg>(value: string, msg: Msg): Command<Msg> {
+    return { kind: 'Log', value, msg, };
+}
+
+function none<Msg>(): Command<Msg> {
+    return { kind: 'None' };
+}
 
 function program<State, Msg>(
     initialState: State,
@@ -31,14 +31,14 @@ function program<State, Msg>(
     const elem = document.getElementById('main');
     let mutableState = initialState;
 
-    function doCommand<A>(cmd: Command<Msg, A>): Promise<void> {
+    function doCommand(cmd: Command<Msg>): Promise<void> {
         return new Promise((res, rej) => {
-            switch (true) {
-                case cmd instanceof Log:
+            switch (cmd.kind) {
+                case 'Log':
                     console.log(cmd.value);
-                    cmd.message && message(cmd.message);
+                    message(cmd.msg);
                     res();
-                case cmd instanceof None:
+                case 'None':
                     res();
                 default:
                     rej();
@@ -67,6 +67,6 @@ function program<State, Msg>(
 export {
     program,
     Command,
-    None,
-    Log,
+    none,
+    log,
 };

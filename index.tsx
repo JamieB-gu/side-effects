@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { program, Log, None, Command } from './app';
+import { program, log, none, Command } from './app';
 import React from 'react';
 
 
@@ -22,17 +22,17 @@ type Msg
 function update(state: State, message: Msg): [State, Command<Msg>] {
     switch (message.kind) {
         case 'Increment':
-            return [ { ...state, num: state.num + 1 }, new None() ];
+            return [ { ...state, num: state.num + 1 }, none() ];
         case 'Decrement':
-            return [ { ...state, num: state.num - 1 }, new None() ];
+            return [ { ...state, num: state.num - 1 }, none() ];
         case 'SetName':
-            return [ { ...state, name: message.value }, new None() ];
+            return [ { ...state, name: message.value }, none() ];
         case 'Logged':
-            return [ { ...state, status: 'Logged' }, new None() ];
+            return [ { ...state, status: 'Logged' }, none() ];
         case 'LogWords':
-            return [ state, new Log('hello', { kind: 'Logged' }) ];
+            return [ state, log('hello', { kind: 'Logged' }) ];
         default:
-            return [ state, new None() ];
+            return [ state, none() ];
     }
 }
 
