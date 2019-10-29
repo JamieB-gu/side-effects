@@ -55,10 +55,6 @@ function program<State, Msg>(
     }
 
     render(view(initialState, message), elem);
-
-    return {
-        message,
-    };
 }
 
 
