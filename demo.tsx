@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { program, log, none, Effect } from './src/app';
+import { app, log, none, Effect } from './src/app';
 import React from 'react';
 
 
@@ -58,4 +58,4 @@ function view(state: State, sendMsg: (m: Msg) => void): React.ReactElement {
 
 // ----- Run ----- //
 
-program({ num: 5, name: 'world', status: '' }, update, view);
+app({ num: 5, name: 'world', status: '' }, update, view);

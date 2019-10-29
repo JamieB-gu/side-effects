@@ -23,7 +23,7 @@ function none<Msg>(): Effect<Msg> {
     return { kind: 'None' };
 }
 
-function program<State, Msg>(
+function app<State, Msg>(
     initialState: State,
     update: Update<State, Msg>,
     view: View<State, Msg>,
@@ -61,7 +61,7 @@ function program<State, Msg>(
 // ----- Exports ----- //
 
 export {
-    program,
+    app,
     Effect,
     none,
     log,
