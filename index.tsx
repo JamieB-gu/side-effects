@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { program, Log, None, CommandA } from './app';
+import { program, Log, None, Command } from './app';
 import React from 'react';
 
 
@@ -11,7 +11,7 @@ type State = { num: number, name: string, status: string };
 
 // ----- Update ----- //
 
-type Message
+type Msg
     = { kind: 'Increment' }
     | { kind: 'Decrement' }
     | { kind: 'SetName', value: string }
@@ -19,7 +19,7 @@ type Message
     | { kind: 'LogWords', value: string }
     ;
 
-function update(state: State, message: Message): [State, CommandA<Message>] {
+function update(state: State, message: Msg): [State, Command<Msg>] {
     switch (message.kind) {
         case 'Increment':
             return [ { ...state, num: state.num + 1 }, new None() ];
@@ -39,7 +39,7 @@ function update(state: State, message: Message): [State, CommandA<Message>] {
 
 // ----- View ----- //
 
-function view(state: State, event: (m: Message) => void): React.ReactElement {
+function view(state: State, event: (m: Msg) => void): React.ReactElement {
     return (
         <div>
             The state is: {state.num}
