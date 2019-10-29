@@ -5,21 +5,21 @@ import { render } from 'react-dom';
 
 // ----- Setup ----- //
 
-type Command<Msg>
+type Effect<Msg>
     = { kind: 'None' }
     | { kind: 'Log', value: string, msg: Msg };
 
-type Update<State, Msg> = (state: State, message: Msg) => [State, Command<Msg>];
+type Update<State, Msg> = (state: State, message: Msg) => [State, Effect<Msg>];
 type View<State, Msg> = (state: State, event: (m: Msg) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //
 
-function log<Msg>(value: string, msg: Msg): Command<Msg> {
+function log<Msg>(value: string, msg: Msg): Effect<Msg> {
     return { kind: 'Log', value, msg, };
 }
 
-function none<Msg>(): Command<Msg> {
+function none<Msg>(): Effect<Msg> {
     return { kind: 'None' };
 }
 
@@ -31,12 +31,12 @@ function program<State, Msg>(
     const elem = document.getElementById('main');
     let mutableState = initialState;
 
-    function doCommand(cmd: Command<Msg>): Promise<void> {
+    function performEffect(effect: Effect<Msg>): Promise<void> {
         return new Promise((res, rej) => {
-            switch (cmd.kind) {
+            switch (effect.kind) {
                 case 'Log':
-                    console.log(cmd.value);
-                    message(cmd.msg);
+                    console.log(effect.value);
+                    message(effect.msg);
                     res();
                 case 'None':
                     res();
@@ -47,10 +47,10 @@ function program<State, Msg>(
     }
 
     function message(msg: Msg) {
-        const [ state, cmd ] = update(mutableState, msg);
+        const [ state, effect ] = update(mutableState, msg);
 
         mutableState = state;
-        doCommand(cmd);
+        performEffect(effect);
         render(view(mutableState, message), elem);
     }
 
@@ -62,7 +62,7 @@ function program<State, Msg>(
 
 export {
     program,
-    Command,
+    Effect,
     none,
     log,
 };

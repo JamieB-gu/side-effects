@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { program, log, none, Command } from './app';
+import { program, log, none, Effect } from './app';
 import React from 'react';
 
 
@@ -19,7 +19,7 @@ type Msg
     | { kind: 'LogWords', value: string }
     ;
 
-function update(state: State, message: Msg): [State, Command<Msg>] {
+function update(state: State, message: Msg): [State, Effect<Msg>] {
     switch (message.kind) {
         case 'Increment':
             return [ { ...state, num: state.num + 1 }, none() ];
