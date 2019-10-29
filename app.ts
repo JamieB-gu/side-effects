@@ -10,7 +10,7 @@ type Effect<Msg>
     | { kind: 'Log', value: string, msg: Msg };
 
 type Update<State, Msg> = (state: State, message: Msg) => [State, Effect<Msg>];
-type View<State, Msg> = (state: State, event: (m: Msg) => void) => React.ReactElement;
+type View<State, Msg> = (state: State, sendMsg: (m: Msg) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //

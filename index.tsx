@@ -39,18 +39,18 @@ function update(state: State, message: Msg): [State, Effect<Msg>] {
 
 // ----- View ----- //
 
-function view(state: State, event: (m: Msg) => void): React.ReactElement {
+function view(state: State, sendMsg: (m: Msg) => void): React.ReactElement {
     return (
         <div>
             The state is: {state.num}
             <div>
-                <button onClick={() => event({ kind: 'Increment' })}>+</button>
-                <button onClick={() => event({ kind: 'Decrement' })}>-</button>
+                <button onClick={() => sendMsg({ kind: 'Increment' })}>+</button>
+                <button onClick={() => sendMsg({ kind: 'Decrement' })}>-</button>
             </div>
             <p>Hello {state.name}</p>
-            <input onChange={(evt) => event({ kind: 'SetName', value: evt.target.value })} />
+            <input onChange={(evt) => sendMsg({ kind: 'SetName', value: evt.target.value })} />
             <p>{state.status}</p>
-            <button onClick={() => event({ kind: 'LogWords', value: 'Clicked'})}>Click me!</button>
+            <button onClick={() => sendMsg({ kind: 'LogWords', value: 'Clicked'})}>Click me!</button>
         </div>
     );
 }
