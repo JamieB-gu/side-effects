@@ -9,6 +9,6 @@
         "strict": true
     },
     "files": [
-        "index.tsx"
+        "demo.tsx"
     ]
 }

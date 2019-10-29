@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { program, log, none, Effect } from './app';
+import { program, log, none, Effect } from './src/app';
 import React from 'react';
 
 

@@ -1,6 +1,6 @@
 # Side Effects
 
-An experiment in state management with React.
+An experiment in state management and side effects with React. The app code that manages state and side effects lives in `src/app.ts`. Also included is a `demo.tsx` file that demonstrates how this can be used in an application.
 
 ## Install
 
