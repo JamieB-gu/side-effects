@@ -3,6 +3,10 @@
 import { app, log, none, Effect, giveNative, AppEvent } from './src/app';
 import React from 'react';
 
+// Pretends that this is running in an iOS app.
+import './src/mockWebview';
+import './src/mockNative';
+
 
 // ----- State ----- //
 

@@ -1,43 +1,14 @@
 // ----- Imports ----- //
 
 import { render } from 'react-dom';
-import './mockWebview';
 
 
-// ----- Setup ----- //
+// ----- Effects ----- //
 
 type Effect<Msg>
     = { kind: 'None' }
     | { kind: 'Log', value: string, msg: Msg }
     | { kind: 'Parcel', parcel: string };
-
-type AppEvent<Msg>
-    = { kind: 'NativeParcel', toMsg: (parcel: string) => Msg };
-
-type Update<State, Msg> = (state: State, message: Msg) => [State, Effect<Msg>];
-type View<State, Msg> = (state: State, sendMsg: (m: Msg) => void) => React.ReactElement;
-
-declare global {
-    interface Window {
-        nativeParcel: (message: string) => void,
-    }
-}
-
-function resetNative(): void {
-    window.nativeParcel = () => {};
-}
-
-function resetEvents(): void {
-    resetNative();
-}
-
-// Mock a native parcel
-setTimeout(() => {
-    window.nativeParcel('Hello from the native layer!');
-}, 3000);
-
-
-// ----- Functions ----- //
 
 function giveNative<Msg>(parcel: string): Effect<Msg> {
     return { kind: 'Parcel', parcel };
@@ -50,6 +21,44 @@ function log<Msg>(value: string, msg: Msg): Effect<Msg> {
 function none<Msg>(): Effect<Msg> {
     return { kind: 'None' };
 }
+
+
+// ----- Events ----- //
+
+declare global {
+    interface Window {
+        nativeParcel: (message: string) => void,
+    }
+}
+
+declare global {
+    interface Window {
+        webkit: {
+            messageHandlers: {
+                webviewParcel: {
+                    postMessage(message: string): void,
+                },
+            }
+        }
+    }
+}
+
+type AppEvent<Msg>
+    = { kind: 'NativeParcel', toMsg: (parcel: string) => Msg };
+
+function resetNative(): void {
+    window.nativeParcel = () => {};
+}
+
+function resetEvents(): void {
+    resetNative();
+}
+
+
+// ----- App ----- //
+
+type Update<State, Msg> = (state: State, message: Msg) => [State, Effect<Msg>];
+type View<State, Msg> = (state: State, sendMsg: (m: Msg) => void) => React.ReactElement;
 
 function app<State, Msg>(
     initialState: State,
@@ -80,11 +89,11 @@ function app<State, Msg>(
 
     function eventListeners(state: State) {
         resetEvents();
-        const es = events(state);
+        const listeners = events(state);
 
-        switch (es.kind) {
+        switch (listeners.kind) {
             case 'NativeParcel':
-                window.nativeParcel = (parcel: string): void => message(es.toMsg(parcel));
+                window.nativeParcel = (parcel: string): void => message(listeners.toMsg(parcel));
                 break;
             default:
                 throw new Error('Unrecognised event');
