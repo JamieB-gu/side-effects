@@ -1,6 +1,6 @@
 // ----- Imports ----- //
 
-import { app, log, none, Effect } from './src/app';
+import { app, log, none, Effect, giveNative } from './src/app';
 import React from 'react';
 
 
@@ -17,6 +17,7 @@ type Msg
     | { kind: 'SetName', value: string }
     | { kind: 'Logged' }
     | { kind: 'LogWords', value: string }
+    | { kind: 'HelloNative' }
     ;
 
 function update(state: State, message: Msg): [State, Effect<Msg>] {
@@ -31,6 +32,8 @@ function update(state: State, message: Msg): [State, Effect<Msg>] {
             return [ { ...state, status: 'Logged' }, none() ];
         case 'LogWords':
             return [ state, log('hello', { kind: 'Logged' }) ];
+        case 'HelloNative':
+            return [ state, giveNative('Hello Native!') ];
         default:
             return [ state, none() ];
     }
@@ -51,6 +54,7 @@ function view(state: State, sendMsg: (m: Msg) => void): React.ReactElement {
             <input onChange={(evt) => sendMsg({ kind: 'SetName', value: evt.target.value })} />
             <p>{state.status}</p>
             <button onClick={() => sendMsg({ kind: 'LogWords', value: 'Clicked'})}>Click me!</button>
+            <button onClick={() => sendMsg({ kind: 'HelloNative' })}>Talk to Native Layer</button>
         </div>
     );
 }

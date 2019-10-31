@@ -1,19 +1,25 @@
 // ----- Imports ----- //
 
 import { render } from 'react-dom';
+import './mockWebview';
 
 
 // ----- Setup ----- //
 
 type Effect<Msg>
     = { kind: 'None' }
-    | { kind: 'Log', value: string, msg: Msg };
+    | { kind: 'Log', value: string, msg: Msg }
+    | { kind: 'Parcel', parcel: string };
 
 type Update<State, Msg> = (state: State, message: Msg) => [State, Effect<Msg>];
 type View<State, Msg> = (state: State, sendMsg: (m: Msg) => void) => React.ReactElement;
 
 
 // ----- Functions ----- //
+
+function giveNative<Msg>(parcel: string): Effect<Msg> {
+    return { kind: 'Parcel', parcel };
+}
 
 function log<Msg>(value: string, msg: Msg): Effect<Msg> {
     return { kind: 'Log', value, msg, };
@@ -37,11 +43,14 @@ function app<State, Msg>(
                 case 'Log':
                     console.log(effect.value);
                     message(effect.msg);
-                    res();
+                    return res();
+                case 'Parcel':
+                    window.webkit.messageHandlers.webviewParcel.postMessage(effect.parcel);
+                    return res();
                 case 'None':
-                    res();
+                    return res();
                 default:
-                    rej();
+                    return rej();
             }    
         });
     }
@@ -65,4 +74,5 @@ export {
     Effect,
     none,
     log,
+    giveNative,
 };
